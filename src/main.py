@@ -19,6 +19,7 @@
 
 import os
 import time
+import random
 import multiprocessing
 import chess
 import chess.engine
@@ -30,6 +31,69 @@ OPENINGS = "./openings/"
 RESULTS = "./results/"
 CORES = multiprocessing.cpu_count()
 TIME_CTRL = (3, 3)
+OPTIONS = {}
+
+
+def play_games():
+    while True:
+        if random.random() > 0.5:
+            wpath = ENG1
+            bpath = ENG2
+            white = chess.engine.SimpleEngine.popen_uci(wpath)
+            black = chess.engine.SimpleEngine.popen_uci(bpath)
+        else:
+            wpath = ENG2
+            bpath = ENG1
+            white = chess.engine.SimpleEngine.popen_uci(wpath)
+            black = chess.engine.SimpleEngine.popen_uci(bpath)
+        white.configure(OPTIONS)
+        black.configure(OPTIONS)
+
+        board = chess.Board()
+        with open(random.choice(os.listdir(OPENINGS)), "r") as file:
+            game = chess.pgn.read_game(file)
+            for move in game.mainline_moves():
+                board.push(move)
+
+        wtime = TIME_CTRL[0] * 60
+        btime = TIME_CTRL[0] * 60
+        winc = TIME_CTRL[1]
+        binc = TIME_CTRL[1]
+        while True:
+            start = time.time()
+            if board.turn:
+                limit = chess.engine.Limit(white_clock=wtime, black_clock=btime, white_inc=winc, black_inc=binc)
+                board.push(white.play(board, limit).move)
+                wtime -= time.time() - start
+                wtime += winc
+                if wtime < 0:
+                    result = "0-1"
+                    break
+            else:
+                limit = chess.engine.Limit(white_clock=wtime, black_clock=btime, white_inc=winc, black_inc=binc)
+                board.push(black.play(board, limit).move)
+                btime -= time.time() - start
+                btime += binc
+                if btime < 0:
+                    result = "1-0"
+                    break
+
+            if board.is_game_over():
+                result = board.result()
+                break
+
+        print(f"Game finished in {len(board.move_stack)} plies. Result is {result}.")
+        fname = os.path.join(RESULTS, str(random.randint(0, 10**10))+".pgn")
+        with open(fname, "w") as file:
+            game = chess.pgn.Game()
+            game.headers["Event"] = "ELO Testing"
+            game.headers["White"] = wpath
+            game.headers["Black"] = bpath
+            game.headers["Result"] = result
+            node = game.add_variation(board.move_stack[0])
+            for move in board.move_stack[1:]:
+                node = node.add_variation(move)
+            print(game, file=file)
 
 
 def main():
