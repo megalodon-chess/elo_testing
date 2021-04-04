@@ -61,23 +61,28 @@ def play_games():
         winc = TIME_CTRL[1]
         binc = TIME_CTRL[1]
         while True:
-            start = time.time()
-            if board.turn:
-                limit = chess.engine.Limit(white_clock=wtime, black_clock=btime, white_inc=winc, black_inc=binc)
-                board.push(white.play(board, limit).move)
-                wtime -= time.time() - start
-                wtime += winc
-                if wtime < 0:
-                    result = "0-1"
-                    break
-            else:
-                limit = chess.engine.Limit(white_clock=wtime, black_clock=btime, white_inc=winc, black_inc=binc)
-                board.push(black.play(board, limit).move)
-                btime -= time.time() - start
-                btime += binc
-                if btime < 0:
-                    result = "1-0"
-                    break
+            try:
+                start = time.time()
+                if board.turn:
+                    limit = chess.engine.Limit(white_clock=wtime, black_clock=btime, white_inc=winc, black_inc=binc)
+                    board.push(white.play(board, limit).move)
+                    wtime -= time.time() - start
+                    wtime += winc
+                    if wtime < 0:
+                        result = "0-1"
+                        break
+                else:
+                    limit = chess.engine.Limit(white_clock=wtime, black_clock=btime, white_inc=winc, black_inc=binc)
+                    board.push(black.play(board, limit).move)
+                    btime -= time.time() - start
+                    btime += binc
+                    if btime < 0:
+                        result = "1-0"
+                        break
+            except chess.engine.EngineError:
+                print(f"Game illegal move! Continuing to next game.")
+                result = "*"
+                break
 
             if board.is_game_over():
                 result = board.result()
