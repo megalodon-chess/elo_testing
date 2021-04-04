@@ -50,7 +50,7 @@ def play_games():
         black.configure(OPTIONS)
 
         board = chess.Board()
-        with open(random.choice(os.listdir(OPENINGS)), "r") as file:
+        with open(os.path.join(OPENINGS, random.choice(os.listdir(OPENINGS))), "r") as file:
             game = chess.pgn.read_game(file)
             for move in game.mainline_moves():
                 board.push(move)
@@ -102,6 +102,9 @@ def main():
     print(f"Contenders: {ENG1}, {ENG2}")
     print(f"Openings: {OPENINGS}")
     print(f"Time control: {TIME_CTRL[0]}|{TIME_CTRL[1]}")
+
+    for i in range(CORES):
+        multiprocessing.Process(target=play_games).start()
 
 
 main()
