@@ -54,6 +54,7 @@ def play_games():
             game = chess.pgn.read_game(file)
             for move in game.mainline_moves():
                 board.push(move)
+        board.push(random.choice(list(board.generate_legal_moves())))
 
         wtime = TIME_CTRL[0] * 60
         btime = TIME_CTRL[0] * 60
@@ -81,6 +82,8 @@ def play_games():
             if board.is_game_over():
                 result = board.result()
                 break
+        white.quit()
+        black.quit()
 
         print(f"Game finished in {len(board.move_stack)} plies. Result is {result}.")
         fname = os.path.join(RESULTS, str(random.randint(0, 10**10))+".pgn")
