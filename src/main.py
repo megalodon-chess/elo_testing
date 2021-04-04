@@ -30,7 +30,7 @@ ENG2 = "./engines/0.3.1"
 OPENINGS = "./openings/"
 RESULTS = "./results/"
 CORES = multiprocessing.cpu_count()
-TIME_CTRL = (3, 3)
+TIME_CTRL = (5, 3)
 OPTIONS = {}
 
 
