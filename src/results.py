@@ -21,10 +21,11 @@ import os
 import chess
 import chess.pgn
 
-RESULTS = "./results/"
+RESULTS = "./results/0.3.0v0.3.2"
 
 
 def main():
+    print(f"Compiling results from {RESULTS}")
     files = [os.path.join(RESULTS, f) for f in os.listdir(RESULTS)]
     with open(files[0], "r") as file:
         game = chess.pgn.read_game(file)

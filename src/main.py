@@ -26,9 +26,9 @@ import chess.engine
 import chess.pgn
 
 ENG1 = "./engines/0.3.0"
-ENG2 = "./engines/0.3.1"
+ENG2 = "./engines/0.3.2"
 OPENINGS = "./openings/"
-RESULTS = "./results/"
+RESULTS = "./results_0.3.0v0.3.2/"
 CORES = multiprocessing.cpu_count()
 TIME_CTRL = (5, 3)
 OPTIONS = {}
