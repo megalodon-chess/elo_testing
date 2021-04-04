@@ -43,7 +43,7 @@ def main():
                     eng2_score += 1
                 elif result == "1-0":
                     eng1_score += 1
-            elif w == eng2:
+            else:
                 if result == "0-1":
                     eng1_score += 1
                 elif result == "1-0":
