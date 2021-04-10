@@ -25,10 +25,10 @@ import chess
 import chess.engine
 import chess.pgn
 
-ENG1 = "./engines/0.3.0"
-ENG2 = "./engines/0.3.2"
+ENG1 = "./engines/MegMove"
+ENG2 = "./engines/MegMain"
 OPENINGS = "./openings/"
-RESULTS = "./results_0.3.0v0.3.2/"
+RESULTS = "./results_MegMovevMegMain/"
 CORES = multiprocessing.cpu_count()
 TIME_CTRL = (5, 3)
 OPTIONS = {}
@@ -39,18 +39,17 @@ def play_games():
         if random.random() > 0.5:
             wpath = ENG1
             bpath = ENG2
-            white = chess.engine.SimpleEngine.popen_uci(wpath)
-            black = chess.engine.SimpleEngine.popen_uci(bpath)
         else:
             wpath = ENG2
             bpath = ENG1
-            white = chess.engine.SimpleEngine.popen_uci(wpath)
-            black = chess.engine.SimpleEngine.popen_uci(bpath)
+
+        white = chess.engine.SimpleEngine.popen_uci(wpath)
+        black = chess.engine.SimpleEngine.popen_uci(bpath)
         white.configure(OPTIONS)
         black.configure(OPTIONS)
 
         board = chess.Board()
-        with open(os.path.join(OPENINGS, random.choice(os.listdir(OPENINGS))), "r") as file:
+        with open(os.path.join(OPENINGS, random.choice(os.listdir(OPENINGS)))) as file:
             game = chess.pgn.read_game(file)
             for move in game.mainline_moves():
                 board.push(move)

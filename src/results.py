@@ -21,20 +21,20 @@ import os
 import chess
 import chess.pgn
 
-RESULTS = "./results_0.3.0v0.3.2"
+RESULTS = "./results_MegMovevMegMain"
 
 
 def main():
     print(f"Compiling results from {RESULTS}")
     files = [os.path.join(RESULTS, f) for f in os.listdir(RESULTS)]
-    with open(files[0], "r") as file:
+    with open(files[0]) as file:
         game = chess.pgn.read_game(file)
         eng1 = game.headers["White"]
         eng2 = game.headers["Black"]
     eng1_score = 0
     eng2_score = 0
     for f in files:
-        with open(f, "r") as file:
+        with open(f) as file:
             game = chess.pgn.read_game(file)
             result = game.headers["Result"]
             w = game.headers["White"]
