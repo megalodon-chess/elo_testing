@@ -25,13 +25,15 @@ import chess
 import chess.engine
 import chess.pgn
 
-ENG1 = "./engines/MegMove"
-ENG2 = "./engines/MegMain"
+ENG1 = "./engines/Meg1"
+ENG2 = "./engines/MegRand"
 OPENINGS = "./openings/"
-RESULTS = "./results_MegMovevMegMain/"
+RESULTS = "./results_Meg1vMegRand/"
 CORES = multiprocessing.cpu_count()
 TIME_CTRL = (5, 3)
 OPTIONS = {}
+
+curr_game = 0
 
 
 def play_games():
@@ -53,6 +55,7 @@ def play_games():
             game = chess.pgn.read_game(file)
             for move in game.mainline_moves():
                 board.push(move)
+        board.push(random.choice(list(board.generate_legal_moves())))
         board.push(random.choice(list(board.generate_legal_moves())))
 
         wtime = TIME_CTRL[0] * 60
@@ -90,7 +93,8 @@ def play_games():
         black.quit()
 
         print(f"Game finished in {len(board.move_stack)} plies. Result is {result}.")
-        fname = os.path.join(RESULTS, str(random.randint(0, 10**10))+".pgn")
+        fname = os.path.join(RESULTS, str(curr_game)+".pgn")
+        curr_game += 1
         with open(fname, "w") as file:
             game = chess.pgn.Game()
             game.headers["Event"] = "ELO Testing"

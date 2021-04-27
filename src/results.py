@@ -21,7 +21,7 @@ import os
 import chess
 import chess.pgn
 
-RESULTS = "./results_MegMovevMegMain"
+RESULTS = "./results_Meg1vMegRand"
 
 
 def main():
@@ -31,8 +31,7 @@ def main():
         game = chess.pgn.read_game(file)
         eng1 = game.headers["White"]
         eng2 = game.headers["Black"]
-    eng1_score = 0
-    eng2_score = 0
+    win = draw = loss = 0
     for f in files:
         with open(f) as file:
             game = chess.pgn.read_game(file)
@@ -41,22 +40,22 @@ def main():
             b = game.headers["Black"]
             if w == eng1:
                 if result == "0-1":
-                    eng2_score += 1
+                    loss += 1
                 elif result == "1-0":
-                    eng1_score += 1
+                    win += 1
             else:
                 if result == "0-1":
-                    eng1_score += 1
+                    win += 1
                 elif result == "1-0":
-                    eng2_score += 1
+                    loss += 1
             if result == "1/2-1/2":
-                eng1_score += 0.5
-                eng2_score += 0.5
+                draw += 1
 
     eng1_elo = 0
-    eng2_elo = (eng2_score*400-eng1_score*400) / (eng1_score+eng2_score)
+    eng2_elo = ((loss+draw/2)*400-(win+draw/2)*400) / (win+loss+draw)
     print(f"Engine 1: {eng1}, ELO: {eng1_elo}")
     print(f"Engine 2: {eng2}, ELO: {eng2_elo}")
+    print(f"Out of {len(files)} games, {eng1} won {win}, {eng2} won {loss}, and they drew {draw}.")
 
 
 main()
